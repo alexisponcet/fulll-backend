@@ -1,0 +1,135 @@
+name: Fulll Backend CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    Lint:
+        runs-on: ubuntu-24.04
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            - name: Cache pnpm store
+              uses: actions/cache@v4
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Lint project
+              run: pnpm run lint
+
+    Build:
+        runs-on: ubuntu-24.04
+        needs: lint
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            - name: Cache pnpm store
+              uses: actions/cache@v4
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build project
+              run: pnpm run build
+
+    Test:
+        runs-on: ubuntu-24.04
+        needs: [lint, build]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            - name: Cache pnpm store
+              uses: actions/cache@v4
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Add node_sqlite3 linux x86 binaries
+              run: mkdir -p ${{ github.workspace }}/node_modules/.pnpm/sqlite3@5.1.1_encoding@0.1.13/node_modules/sqlite3/lib/binding/napi-v6-linux-glibc-x64 && cp ${{ github.workspace }}/deps/node_sqlite3.node $_
+
+            - name: Test project
+              run: pnpm run test
+
+    E2E:
+        runs-on: ubuntu-24.04
+        needs: [lint, build]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            - name: Cache pnpm store
+              uses: actions/cache@v4
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Add node_sqlite3 linux x86 binaries
+              run: mkdir -p ${{ github.workspace }}/node_modules/.pnpm/sqlite3@5.1.1_encoding@0.1.13/node_modules/sqlite3/lib/binding/napi-v6-linux-glibc-x64 && cp ${{ github.workspace }}/deps/node_sqlite3.node $_
+
+            - name: End to end Test project
+              run: pnpm run e2e

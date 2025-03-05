@@ -1,0 +1,23 @@
+{
+	"arrowParens": "always",
+	"bracketSameLine": false,
+	"bracketSpacing": true,
+	"embeddedLanguageFormatting": "auto",
+	"endOfLine": "lf",
+	"importOrder": ["<THIRD_PARTY_MODULES>", "^@/(libs)/(.*)$", "^@/(src|tests)/(.*)$"],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"insertPragma": false,
+	"jsxSingleQuote": true,
+	"printWidth": 100,
+	"proseWrap": "preserve",
+	"quoteProps": "as-needed",
+	"rangeStart": 0,
+	"requirePragma": false,
+	"semi": true,
+	"singleAttributePerLine": false,
+	"singleQuote": true,
+	"tabWidth": 4,
+	"trailingComma": "none",
+	"useTabs": true
+}
